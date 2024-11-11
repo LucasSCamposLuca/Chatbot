@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: luca##12
+      MYSQL_DATABASE: chatbot_zap
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  backend:
+    build: ./chatbotAPI
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/chatbot_zap
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=luca##12
+    depends_on:
+      - mysql
+
+  python-api:
+    build: ./python-API
+    ports:
+      - "5000:5000"
+    depends_on:
+      - backend
+
+
+volumes:
+  mysql-data:
+
